@@ -1,0 +1,8 @@
+__pycache__
+
+Generator/web_drivers/*
+Generator/tidy-5.4.0-win64/*
+
+Generator/html/*
+
+Generator/geckodriver.log

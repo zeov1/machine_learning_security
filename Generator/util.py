@@ -6,7 +6,9 @@ import string
 import random
 import configparser
 from datetime import datetime
+from typing import Union
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver import Firefox, Chrome
 
 # Printing colors.
 OK_BLUE = '\033[94m'      # [*]
@@ -116,7 +118,7 @@ class Utilty:
         return indivisual
 
     # Check individual using selenium.
-    def check_individual_selenium(self, obj_browser, eval_html_path):
+    def check_individual_selenium(self, obj_browser: Union[Firefox, Chrome], eval_html_path):
         # Evaluate running script using selenium.
         int_score = 0
         error_flag = False
@@ -125,7 +127,12 @@ class Utilty:
         try:
             obj_browser.get(eval_html_path)
         except Exception as e:
-            obj_browser.switch_to.alert.accept()
+            try:
+                alert = obj_browser.switch_to.alert
+                alert.text
+                alert.accept()
+            except Exception as e:
+                pass
             error_flag = True
             return int_score, error_flag
 
@@ -135,8 +142,13 @@ class Utilty:
             ActionChains(obj_browser).move_by_offset(10, 10).perform()
             obj_browser.refresh()
         except Exception as e:
-            # Run script.
-            obj_browser.switch_to.alert.accept()
-            int_score = 1
+            # Проверяем, существует ли alert перед обработкой
+            try:
+                alert = obj_browser.switch_to.alert
+                alert.text  # Проверяем, доступен ли alert
+                alert.accept()
+                int_score = 1
+            except Exception as e:
+                int_score = 1
 
         return int_score, error_flag

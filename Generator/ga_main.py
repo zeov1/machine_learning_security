@@ -8,6 +8,8 @@ import subprocess
 import time
 import locale
 import configparser
+from typing import Union
+from selenium.webdriver import Chrome, Firefox
 import pandas as pd
 from decimal import Decimal
 from util import Utilty
@@ -47,7 +49,7 @@ class GeneticAlgorithm:
     def __init__(self, template, browser):
         self.util = Utilty()
         self.template = template
-        self.obj_browser = browser
+        self.obj_browser: Union[Firefox, Chrome] = browser
 
         # Read config.ini.
         full_path = os.path.dirname(os.path.abspath(__file__))
@@ -143,13 +145,12 @@ class GeneticAlgorithm:
             self.result_list.append([eval_place, obj_ga.genom_list, indivisual])
 
             # Output evaluation results.
-            self.util.print_message(OK, 'Evaluation result : Browser={} {}, '
-                                        'Individual="{} ({})", '
-                                        'Score={}'.format(self.obj_browser.name,
-                                                          self.obj_browser.capabilities['version'],
-                                                          indivisual,
-                                                          obj_ga.genom_list,
-                                                          str(int_score)))
+            self.util.print_message(
+                OK, 
+                f'Evaluation result : Browser={self.obj_browser.name} {self.obj_browser.capabilities.get("version")}, '
+                f'Individual="{indivisual} ({obj_ga.genom_list})", '
+                f'Score={int_score}'
+            )
         return int_score, 0
 
     # Select elite individual.

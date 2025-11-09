@@ -2,7 +2,9 @@
 import os
 import sys
 import configparser
+from typing import Union
 from selenium import webdriver
+from selenium.webdriver import Firefox, Chrome
 from util import Utilty
 from ga_main import GeneticAlgorithm
 from jinja2 import Environment, FileSystemLoader
@@ -50,17 +52,12 @@ if __name__ == "__main__":
     # Start revolution using each browser.
     for browser in driver_list:
         # Create Web driver.
-        obj_browser = None
         if 'geckodriver' in browser:
             obj_browser = webdriver.Firefox(executable_path=util.join_path(driver_dir, browser))
             util.print_message(NOTE, 'Launched : {} {}'.format(obj_browser.capabilities['browserName'],
                                                                obj_browser.capabilities['browserVersion']))
         elif 'chrome' in browser:
             obj_browser = webdriver.Chrome(executable_path=util.join_path(driver_dir, browser))
-            util.print_message(NOTE, 'Launched : {} {}'.format(obj_browser.capabilities['browserName'],
-                                                               obj_browser.capabilities['version']))
-        elif 'IE' in browser:
-            obj_browser = webdriver.Ie(executable_path=util.join_path(driver_dir, browser))
             util.print_message(NOTE, 'Launched : {} {}'.format(obj_browser.capabilities['browserName'],
                                                                obj_browser.capabilities['version']))
         else:
